@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -14,21 +15,13 @@ class MockNewsRepository {
 }
 
 void showNews(BuildContext context) async {
-  showModalBottomSheet(
-    scrollControlDisabledMaxHeightRatio: 1,
-    constraints: const BoxConstraints(maxHeight: 700),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(10),
-      ),
-    ),
-    backgroundColor: Theme.of(context).primaryColor,
+  showFlexibleBottomSheet(
+    initHeight: 0.9,
+    isExpand: true,
+    isSafeArea: true,
     context: context,
-    builder: (context) {
-      return NewsPage(
-        contxt: context,
-        limitHeight: 250,
-      );
+    builder: (context, scrollController, bottomSheetOffset) {
+      return NewsPage(contxt: context, limitHeight: 250);
     },
   );
 }
@@ -142,8 +135,7 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size.width;
 
-    return SizedBox(
-      height: 800,
+    return Expanded(
       child: FutureBuilder(
         future: mock.getNews(),
         builder: (context, snapshot) {
